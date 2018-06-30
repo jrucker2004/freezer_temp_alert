@@ -1,31 +1,30 @@
 #!/bin/bash
 
-# This script uses an infinite loop to log tempratures and send emails when the
-# temp gets too low for too long.
+# This script checks the temp, logs it, then looks at the last few temps to see
+# if the freezer is too warm.
 #
-# If 20 of the last 25 temps are too warm, an email will be sent.
+# If 10 of the last 12 temps are too warm, an email will be sent.
 #
-# TODO:  Make this no an infinite loop.  Use cron to determine when it runs,
-# and have this script just do it once each time it's called.
+# Run this script under a cron job once per minute
 #
-# TODO:  Add timestamps to logs
+# * * * * * /home/pi/freezer_temp_alert/freezerTemp.sh 2>&1 >> /home/pi/freezer_temp_alert/logs/runlog.log
 #
-# TODO:  properly parse temps out of logs after timestamps are added
+# TODO:  Figure out when the last email was sent so they're not sent too often
 #
-# TODO:  Add runtime logs
 
-getTemp="python checkTemp.py"
-checkInterval=30
 warnTemp=5
-warnDuration=20
-prevEmail=0
+warnDuration=10
 emailDelay=300
+curTime=`date +%D-%T`
+homeDir=/home/pi/freezer_temp_alert
 
 check_prev_temps(){
   i=0
-  temps=( $(tail -25 tempLog.log) )
+  temps=( $(tail -12 $homeDir/logs/tempLog.log) )
   for temp in ${temps[@]}
   do
+    # remove timestamp from temp
+    temp=$(echo $temp | sed 's/^.*,//')
     if (( $(echo "$temp > $warnTemp" | bc -l) ))
     then
       ((i++))
@@ -33,24 +32,29 @@ check_prev_temps(){
   done
     if [ "$i" -ge "$warnDuration" ]
     then
+      # send an email, but only if one wasn't sent recently
       now=$(date +%s)
       delayedTime=$((now - $emailDelay))
+      
+      # when was the last email sent?
+      prevEmail=`cat .prev_email`
 
       # check to see when the last email was sent.  If it was more than
       # 5 minutes ago, send another one.
       if [ "$delayedTime" -gt "$prevEmail" ]
       then
-        prevEmail=$(date +%s)
-        `python sendEmail.py $warnTemp`
+        echo "$curTime Sending alert email" >> $homedir/logs/runlog.log
+        #create a file that keeps track of when the previous email was sent
+        echo date +%s > .prev_email
+        `python $homeDir/sendEmail.py $warnTemp`
       fi
     fi
 }
 
-# loop forever, logging temps, and check the logged temps
-while [ 1==1 ]
-do
-  curTemp=`$getTemp`
-  echo $curTemp >> tempLog.log
-  check_prev_temps
-  sleep $checkInterval
-done
+# Get the current temp
+# log the temp to the temp log
+# check the previous temps to see if an email needs to be sent
+
+curTemp=`python $homeDir/checkTemp.py`
+echo "$curTime,$curTemp" >> $homeDir/logs/tempLog.log
+check_prev_temps
