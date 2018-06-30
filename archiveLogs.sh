@@ -27,8 +27,6 @@ rm $logDir/archive/tempLog.log
 echo "$curTime deleting old archive log files"
 find $logDir/archive/*tempLog* -mtime +10 -exec rm {} \;
 
-# TODO: Everything below this won't work until runtime logs are created
-
 # Archive the runtime log file if it's older than 1 month.
 fileCreated=$(head -1 $logDir/runlog.log | awk '{print $1}')
 dateFileCreated=${fileCreated%-*}
