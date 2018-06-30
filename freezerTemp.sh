@@ -14,7 +14,7 @@
 
 warnTemp=5
 warnDuration=10
-emailDelay=300
+emailDelay=600
 curTime=`date +%D-%T`
 homeDir=/home/pi/freezer_temp_alert
 
