@@ -23,7 +23,7 @@ rm $logDir/archive/tempLog.log
 # remove all files in the archive that are older than 10 of days.
 # making this a configed number of days was more complicated than it was worth.
 echo ""$curTime deleting old archive log files"
-find $logDir/archive/* -mtime +10 -exec rm {} \;
+find $logDir/archive/*tempLog* -mtime +10 -exec rm {} \;
 
 # TODO: Everything below this won't work until runtime logs are created
 
