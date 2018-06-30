@@ -9,12 +9,10 @@
 #
 # * * * * * /home/pi/freezer_temp_alert/freezerTemp.sh 2>&1 >> /home/pi/freezer_temp_alert/logs/runlog.log
 #
-# TODO:  Figure out when the last email was sent so they're not sent too often
-#
 
 warnTemp=5
 warnDuration=10
-emailDelay=300
+emailDelay=600
 curTime=`date +%D-%T`
 homeDir=/home/pi/freezer_temp_alert
 
@@ -37,15 +35,15 @@ check_prev_temps(){
       delayedTime=$((now - $emailDelay))
       
       # when was the last email sent?
-      prevEmail=`cat .prev_email`
+      prevEmail=`cat $homeDir/.prev_email`
 
       # check to see when the last email was sent.  If it was more than
       # 5 minutes ago, send another one.
       if [ "$delayedTime" -gt "$prevEmail" ]
       then
-        echo "$curTime Sending alert email" >> $homedir/logs/runlog.log
+        echo "$curTime Sending alert email" >> $homeDir/logs/runlog.log
         #create a file that keeps track of when the previous email was sent
-        echo date +%s > .prev_email
+        echo `date +%s` > $homeDir/.prev_email
         `python $homeDir/sendEmail.py $warnTemp`
       fi
     fi

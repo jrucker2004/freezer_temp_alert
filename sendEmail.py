@@ -25,7 +25,7 @@ toAdd = '<email_to_address>'
 fromAdd = '<email_from_address>'
 subject = 'FREEZER IS WARM!'
 header = 'To: ' + toAdd + '\n' + 'From: ' + fromAdd + '\n' + 'Subject: ' + subject
-body = 'Fereezer has been below ' + str(warnTemp) + ' degrees fahrenheit for too long. \n here are the last 25 recorded temps: \n '
+body = 'Fereezer has been below ' + str(warnTemp) + ' degrees fahrenheit for too long. \n here are the last 25 recorded temps: \n\n'
 
 def send_email():
     s = smtplib.SMTP('smtp.gmail.com',587)
@@ -46,7 +46,7 @@ def get_temps (f, n):
     lines = stdout.readlines(); stdout.close
     return lines
 
-temps = get_temps('tempLog.log', '25')
+temps = get_temps('/home/pi/freezer_temp_alert/logs/tempLog.log', '25')
 
 body = body + "".join([str(i) for i in temps])
 
