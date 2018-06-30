@@ -10,3 +10,14 @@ out.
 - create a cron job to check the temp sensor
 - create a cron job to archive logs
 - configure the email job in sendEmail.py
+- you might need to create a runlog.log file.  Archiving of logs might break if it's not there.
+
+
+## Tutorials
+I used the following resources while making this:
+- http://www.circuitbasics.com/raspberry-pi-ds18b20-temperature-sensor-tutorial/
+- https://www.youtube.com/watch?v=0kpGcMjpDcw
+
+## Additional stuff
+I 3d printed some parts to support this project.  Details on thingiverse:
+https://www.thingiverse.com/thing:2984485
