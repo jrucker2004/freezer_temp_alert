@@ -11,6 +11,8 @@
 # TODO:  Add timestamps to logs
 #
 # TODO:  properly parse temps out of logs after timestamps are added
+#
+# TODO:  Add runtime logs
 
 getTemp="python checkTemp.py"
 checkInterval=30
