@@ -38,7 +38,7 @@ check_prev_temps(){
       prevEmail=`cat $homeDir/.prev_email`
 
       # check to see when the last email was sent.  If it was more than
-      # 5 minutes ago, send another one.
+      # 10 minutes ago, send another one.
       if [ "$delayedTime" -gt "$prevEmail" ]
       then
         echo "$curTime Sending alert email" >> $homeDir/logs/runlog.log
