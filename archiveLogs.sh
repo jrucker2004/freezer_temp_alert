@@ -50,6 +50,6 @@ then
   # compress the log file
   tar -cvzf $scriptArchiveName runlog.log
   # remove the old log file
-  rm $logDir/runlog.log
+  rm $logDir/archive/runlog.log
 fi
    
